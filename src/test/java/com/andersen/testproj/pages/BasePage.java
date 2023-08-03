@@ -4,24 +4,24 @@ import com.andersen.testproj.configuration.Hooks;
 import com.andersen.testproj.ui.AppElement;
 import com.andersen.testproj.utils.PropertiesUtil;
 import io.appium.java_client.AppiumBy;
-import java.time.Duration;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
+import io.appium.java_client.AppiumDriver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class BasePage {
 
@@ -29,20 +29,22 @@ public abstract class BasePage {
             AppiumBy.id("com.poqstudio.app.platform.yoursclothing:id/snackbar_text"));
     private final WebDriverWait wait;
     protected final Logger logger = LogManager.getLogger();
+    protected final AppiumDriver driver;
 
     public BasePage() {
+        driver = Hooks.getDriver();
         wait = getWaiter(PropertiesUtil.getPropertyValueInt("timeouts.element-wait"));
     }
 
     private WebDriverWait getWaiter(int timeoutSeconds) {
-        WebDriverWait wait = new WebDriverWait(Hooks.getDriver(), Duration.ofSeconds(timeoutSeconds));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
         wait.pollingEvery(Duration.ofMillis(250))
                 .withTimeout(Duration.ofSeconds(timeoutSeconds));
         return wait;
     }
 
     public String getSnackbarMessageIfPresent() {
-        return isPresent(snackbarMessage) ? getText(snackbarMessage) : null;
+        return isPresent(snackbarMessage) ? getText(snackbarMessage) : "";
     }
 
     protected String getText(AppElement element) {
@@ -84,7 +86,7 @@ public abstract class BasePage {
     }
 
     protected void triggerSearch() {
-        ((JavascriptExecutor) Hooks.getDriver()).executeScript("mobile: performEditorAction",
+        ((JavascriptExecutor) driver).executeScript("mobile: performEditorAction",
                 new HashMap<String, String>() {{
                     put("action", "Search");
         }});
@@ -95,7 +97,7 @@ public abstract class BasePage {
      * @param scrollLength 1.0 is 100% of scroll length
      */
     protected void scrollUp(double scrollLength) {
-        Dimension size = Hooks.getDriver().manage().window().getSize();
+        Dimension size = driver.manage().window().getSize();
         int startX, endX;
         startX = endX = (size.width / 2);
         int startY = (int) (size.height * 0.30);
@@ -109,7 +111,7 @@ public abstract class BasePage {
      * @param scrollLength 1.0 is 100% of scroll length
      */
     protected void scrollDown(double scrollLength) {
-        Dimension size = Hooks.getDriver().manage().window().getSize();
+        Dimension size = driver.manage().window().getSize();
         int startX;
         int endX;
         startX = endX = (size.width / 2);
@@ -127,13 +129,13 @@ public abstract class BasePage {
         swipe.addAction(finger.createPointerDown(0));
         swipe.addAction(finger.createPointerMove(Duration.ofMillis(300), PointerInput.Origin.viewport(), endX, endY));
         swipe.addAction(finger.createPointerUp(0));
-        swipe.addAction(new Pause(finger, Duration.ofMillis(200)));
-        Hooks.getDriver().perform(Collections.singletonList(swipe));
+        swipe.addAction(new Pause(finger, Duration.ofMillis(300)));
+        driver.perform(Collections.singletonList(swipe));
     }
 
     protected void scrollToElement(String elementText) {
         if (PropertiesUtil.isAndroid()) {
-            Hooks.getDriver().findElement(AppiumBy.androidUIAutomator(
+            driver.findElement(AppiumBy.androidUIAutomator(
                     "new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\""
                     + elementText + "\").instance(0))"));
         } else {

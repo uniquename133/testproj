@@ -1,6 +1,6 @@
 package com.andersen.testproj.steps;
 
-import com.andersen.testproj.utils.StringConstant;
+import com.andersen.testproj.data.SnackbarMessage;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import com.andersen.testproj.pages.ProductPage;
@@ -31,7 +31,7 @@ public class ProductSteps {
 
     @Then("User see 'Added to wishlist' snackbar message at product page")
     public void addedToWishlistMessageIsPresent() {
-        Assertions.assertEquals(StringConstant.ADDED_TO_WISHLIST_SNACKBAR_MESSAGE, productPage.getSnackbarMessageIfPresent(),
+        Assertions.assertEquals(SnackbarMessage.ADDED_TO_WISHLIST, productPage.getSnackbarMessageIfPresent(),
                 "Expected snackbar message is not displayed");
     }
 }

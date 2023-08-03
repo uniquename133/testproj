@@ -9,8 +9,16 @@
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-    <maven.compiler.source>8</maven.compiler.source>
-    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.surefire.plugin.version>3.0.0-M7</maven.surefire.plugin.version>
+    <maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
+    <cucumber.version>7.13.0</cucumber.version>
+    <cucumber.reporting.version>5.7.6</cucumber.reporting.version>
+    <junit.jupiter.version>5.6.2</junit.jupiter.version>
+    <junit.platform.version>1.9.3</junit.platform.version>
+    <log4j.version>2.14.0</log4j.version>
+    <appium.version>8.5.1</appium.version>
   </properties>
 
   <build>
@@ -18,16 +26,16 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>${maven.compiler.plugin.version}</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M7</version>
+        <version>${maven.surefire.plugin.version}</version>
         <configuration>
           <properties>
             <configurationParameters>
@@ -43,68 +51,57 @@
     <dependency>
       <groupId>io.cucumber</groupId>
       <artifactId>cucumber-picocontainer</artifactId>
-      <version>7.13.0</version>
+      <version>${cucumber.version}</version>
     </dependency>
     <dependency>
       <groupId>io.cucumber</groupId>
       <artifactId>cucumber-junit-platform-engine</artifactId>
-      <version>7.13.0</version>
-      <scope>test</scope>
+      <version>${cucumber.version}</version>
     </dependency>
     <dependency>
       <groupId>io.cucumber</groupId>
       <artifactId>cucumber-java</artifactId>
-      <version>7.13.0</version>
+      <version>${cucumber.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.6.2</version>
-      <scope>test</scope>
+      <version>${junit.jupiter.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.6.2</version>
-      <scope>test</scope>
+      <version>${junit.jupiter.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-suite-engine</artifactId>
-      <version>1.9.3</version>
-      <scope>test</scope>
+      <version>${junit.platform.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-commons</artifactId>
-      <version>1.9.3</version>
+      <version>${junit.platform.version}</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.junit.jupiter</groupId>-->
-<!--      <artifactId>junit-jupiter</artifactId>-->
-<!--      <version>5.10.0</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>net.masterthought</groupId>
       <artifactId>cucumber-reporting</artifactId>
-      <version>5.7.6</version>
+      <version>${cucumber.reporting.version}</version>
     </dependency>
     <dependency>
       <groupId>io.appium</groupId>
       <artifactId>java-client</artifactId>
-      <version>8.5.1</version>
+      <version>${appium.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <version>2.14.0</version>
-      <scope>test</scope>
+      <version>${log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <version>2.14.0</version>
+      <version>${log4j.version}</version>
     </dependency>
   </dependencies>
 </project>

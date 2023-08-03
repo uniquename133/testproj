@@ -1,52 +1,53 @@
 package com.andersen.testproj.utils;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 
 public class PropertiesUtil {
-    private final static String defaultConfigName = "config.properties";
-    private static PropertiesUtil instance;
-    private static Properties properties = null;
-    private static String propsFileName = null;
+    private static final Set<String> CONFIG_FILES;
+    private static final Properties PROPERTIES;
 
-    public static PropertiesUtil getInstance() {
-        if (instance == null) {
-            instance = new PropertiesUtil();
-        }
-        return instance;
+    static {
+        CONFIG_FILES = new HashSet<>();
+        CONFIG_FILES.add("config.properties");
+
+        PROPERTIES = new Properties();
+        CONFIG_FILES.forEach(file -> {
+            Properties loaded = loadConfigFile(file);
+            PROPERTIES.putAll(loaded);
+        });
     }
 
     public static String getPropertyValue(String name) {
-        return getPropertyValue(name, defaultConfigName);
+        return getProperty(name);
     }
 
     public static int getPropertyValueInt(String name) {
-        return Integer.parseInt(getPropertyValue(name));
+        return Integer.parseInt(getProperty(name));
     }
 
-    private static String getPropertyValue(String name, String propertiesFileName) {
-        if (System.getProperty(name) != null) {
-            return System.getProperty(name);
-        }
-        return getInstance().getValueFromConfigFile(name, propertiesFileName);
+    public static boolean isAndroid() {
+        return "android".equalsIgnoreCase(getPropertyValue("platform"));
     }
 
-    private String getValueFromConfigFile(String key, String propertiesFileName) {
-        if (properties == null || !propsFileName.equals(propertiesFileName)) {
-            properties = loadConfigFile(propertiesFileName);
-            propsFileName = propertiesFileName;
+    private static String getProperty(String name) {
+        String sysProp = System.getProperty(name);
+        if (Objects.nonNull(sysProp)) {
+            return sysProp;
         }
 
-        Object objFromFile = properties.getProperty(key);
-        if (objFromFile != null) {
-            return Objects.toString(objFromFile);
+        String loadedProp = PROPERTIES.getProperty(name);
+        if (Objects.nonNull(loadedProp)) {
+            return loadedProp;
         } else {
-            return null;
+            throw new RuntimeException(String.format("There is no property with name '%s'", name));
         }
     }
 
-    private Properties loadConfigFile(String propertiesFileName) {
+    private static Properties loadConfigFile(String propertiesFileName) {
         try {
             Properties prop = new Properties();
             prop.load(Objects.requireNonNull(PropertiesUtil.class.getClassLoader().getResourceAsStream(propertiesFileName)));
@@ -54,9 +55,5 @@ public class PropertiesUtil {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
-    }
-
-    public static boolean isAndroid() {
-        return "android".equalsIgnoreCase(getPropertyValue("platform"));
     }
 }
