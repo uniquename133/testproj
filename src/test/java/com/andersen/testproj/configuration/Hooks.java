@@ -12,9 +12,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class Hooks {
 
-    private static ThreadLocal<AppiumDriverLocalService> service = new ThreadLocal<>();
+    private static final ThreadLocal<AppiumDriverLocalService> service = new ThreadLocal<>();
 
-    private static ThreadLocal<AppiumDriver> driver = new ThreadLocal<>();
+    private static final ThreadLocal<AppiumDriver> driver = new ThreadLocal<>();
 
     public static AppiumDriver getDriver() {
         return driver.get();
@@ -38,7 +38,7 @@ public class Hooks {
         service.set(appiumServiceBuilder.build());
         service.get().start();
 
-        if (service == null || !service.get().isRunning()) {
+        if (!service.get().isRunning()) {
             throw new AppiumServerHasNotBeenStartedLocallyException("An appium server node is not started!");
         }
     }

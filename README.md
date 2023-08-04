@@ -7,6 +7,6 @@ How to start tests:
 1. Rename your apk file to 'app.apk' and place it into /apps folder
 2. Start emulator or connect real device to computer
 3. Set your device name as 'android.device-name' property in /src/test/resources/config.properties
-4. Run 'mvn clean install' from the project's root directory
+4. Run 'mvn clean test' from the project's root directory
 
 Report can be found in /target/cucumber-report/ folder
